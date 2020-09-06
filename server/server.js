@@ -1,7 +1,9 @@
 const express = require('express')
 const bodyparser = require('body-parser')
+require('./config/config')
+
 const app = express()
-const port = 3000
+const port = process.env.PORT
 
 app.use(bodyparser.urlencoded({extended: false}))
 app.use(bodyparser.json())
