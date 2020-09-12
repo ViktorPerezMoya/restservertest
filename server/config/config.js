@@ -9,4 +9,7 @@ else
 
 process.env.EXPIRED_TOKEN = 60*60;
 
-process.env.SEED = (process.env.NODE_ENV == 'dev' ? 'seed-de-desarrollo' : process.env.SEED);
+if(process.env.NODE_ENV === 'dev')
+    process.env.SEED = 'seed-de-desarrollo';
+else
+    process.env.SEED = process.env.SEED;
