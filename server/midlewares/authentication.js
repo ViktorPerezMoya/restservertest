@@ -4,7 +4,7 @@ const validaToken = (req,res,next) => {
     let token = req.get('token');
 
     jwt.verify(token,process.env.SEED,(err,data) => {
-        if(err) res.status(401).json({status: 'error',message: err});
+        if(err) res.status(401).json({status: 'error',message: err, seed: process.env.SEED});
         req.usuario = data.usuario;
          next();
     });
