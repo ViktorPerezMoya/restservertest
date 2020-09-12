@@ -25,7 +25,7 @@ app.post('/login',(req,res) => {
                     google: usuarioDB.google,
                     _id: usuarioDB._id
                 }
-            },'seed-de-desarrollo',{expiresIn: 60*60*24*30 })
+            },process.env.SEED,{expiresIn: 60*60*24*30 })
         });
     });
 
