@@ -4,6 +4,7 @@ const _ = require('underscore')
 
 const app = express()
 const Usuario = require('../models/usuario')
+const { validaToken, validaAdmin } = require('../midlewares/authentication');
 
 let usuarios = [
     {codigo: 1,nombre: 'Victor Perez'},
@@ -14,7 +15,7 @@ app.get('/', (req, res) => {
     res.send('Demo API Rest')
 })
 
-app.get('/usuarios',(req,res) => {
+app.get('/usuarios', validaToken, (req,res) => {
     
     let desde = Number(req.query.desde) || 0;
     let limite = Number(req.query.limite) || 5;
@@ -37,21 +38,7 @@ app.get('/usuarios',(req,res) => {
 
 })
 
-app.get('/usuario/:codigo',(req,res) =>{
-    if(req.params.codigo === undefined) res.status('400').json({
-        status: 'failed',
-        message: 'No hay codigo de usuario a buscar'
-    });
-    let usuario = usuarios.find(item => item.codigo == req.params.codigo);
-    if(!usuario) res.status('400').json({
-        status: 'failed',
-        message: 'El usuario no existe'
-    });
-
-    res.json({usuario})
-})
-
-app.post('/usuario',(req,res)=>{
+app.post('/usuario', [ validaToken, validaAdmin ], (req,res)=>{
     let data = req.body;
 
     let usuario = new Usuario({
@@ -68,7 +55,7 @@ app.post('/usuario',(req,res)=>{
     });
 })
 
-app.put('/usuario/:id',(req,res) => {
+app.put('/usuario/:id', [ validaToken, validaAdmin ], (req,res) => {
     let id = req.params.id;
     let data = _.pick(req.body,['nombre','email','img','estado','role']);
 
@@ -79,7 +66,7 @@ app.put('/usuario/:id',(req,res) => {
     });
 })
 
-app.delete('/usuario/:id',(req,res) =>{
+app.delete('/usuario/:id', [ validaToken, validaAdmin ], (req,res) =>{
     let id = req.params.id;
     Usuario.findByIdAndDelete(id,(err , usuarioDelete) => {
         if(err) return res.status(400).json({status:'error',message: err});
@@ -90,7 +77,7 @@ app.delete('/usuario/:id',(req,res) =>{
     });
 })
 
-app.delete('/estado/:id',(req,res) => {
+app.delete('/estado/:id', validaToken, (req,res) => {
     let id =  req.params.id;
     Usuario.findByIdAndUpdate(id,{estado: false},{new: true},(err,usuarioBD) => {
         if(err) return res.status(400).json({status:'error',message: err});

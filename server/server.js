@@ -9,7 +9,7 @@ const port = process.env.PORT
 app.use(bodyparser.urlencoded({extended: false}))
 app.use(bodyparser.json())
 
-app.use(require('./routes/usuario'));
+app.use(require('./routes/index'));
 
 mongoose.connect(process.env.URL_DB, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true}, (err) => {
     if(err) throw err;
