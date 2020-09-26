@@ -13,3 +13,5 @@ if(process.env.NODE_ENV === 'dev')
     process.env.SEED = 'seed-de-desarrollo';
 else
     process.env.SEED = process.env.SEED;
+
+process.env.CLIENT_ID = process.env.CLIENT_ID || '752413003409-a2rshoqstva9o88tmcf365tg71jjh160.apps.googleusercontent.com';
