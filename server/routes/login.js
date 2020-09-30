@@ -15,10 +15,10 @@ app.post('/login',(req,res) => {
         if(err) return res.status(500).json({status:'error',message: err});
         if(!usuarioDB) return res.status(400).json({status:'error',message: 'El usuario no existe'});
         
-        if(!bcrypt.compareSync(data.password,usuarioDB.password)) return res.status(400).json({status: 'error',message: 'La clave es incorrecta.'});
+        if(!bcrypt.compareSync(data.password,usuarioDB.password)) return res.status(400).json({success: false, message: 'La clave es incorrecta.'});
 
         res.json({
-            status: 'ok',
+            success: true,
             usuario: usuarioDB,
             token: jwt.sign({
                 usuario: {
@@ -58,18 +58,18 @@ app.post('/google',async (req,res) => {
     let token = req.body.idtoken;
 
     let googleUser = await verify(token).catch(err => {
-        return res.status(403).json({status: 'error',message: err});
+        return res.status(403).json({success: false, message: err});
     });
     
     Usuario.findOne({email: googleUser.email}, (err, usuarioDB) => {
-        if(err) return res.status(500).json({status: 'error',message: err});
+        if(err) return res.status(500).json({success: false, message: err});
         if(usuarioDB){
             //logea el usuario
             if(usuarioDB.google === false){
-                return res.status(400).json({status: 'error', message: 'Debe usar autenticacion manual.'});
+                return res.status(400).json({success: false,  message: 'Debe usar autenticacion manual.'});
             }else{            
                 return res.json({
-                    status: 'ok',
+                    success: true,
                     message: 'Ingreso exitoso!',
                     usuario: usuarioDB,
                     token: jwt.sign({
@@ -88,10 +88,10 @@ app.post('/google',async (req,res) => {
         user.google = true;
 
         user.save((err, usuarioDB) => {
-            if(err) return res.status(500).json({status: 'error',message: err});
+            if(err) return res.status(500).json({success: false, message: err});
 
             return res.json({
-                status: 'ok',
+                success: true,
                 message: 'Usuario creado!',
                 usuario: usuarioDB,
                 token: jwt.sign({

@@ -7,7 +7,7 @@ if(process.env.NODE_ENV === 'dev')
 else 
     process.env.URL_DB = process.env.MONGO_URI; 
 
-process.env.EXPIRED_TOKEN = 60*60;
+process.env.EXPIRED_TOKEN = 60*60*24*30;
 
 if(process.env.NODE_ENV === 'dev')
     process.env.SEED = 'seed-de-desarrollo';
