@@ -15,4 +15,14 @@ const validaAdmin = (req,res,next) => {
     else res.status(401).json({success: false,message: 'Accion no permitida.'});
 }
 
-module.exports = { validaToken, validaAdmin };
+const validaTokenImg = (req,res,next) => {
+    let token = req.query.token;
+
+    jwt.verify(token,process.env.SEED,(err,data) => {
+        if(err) return res.status(401).json({success: false,message: err});
+        req.usuario = data;
+         next();
+    });
+}
+
+module.exports = { validaToken, validaAdmin, validaTokenImg };
